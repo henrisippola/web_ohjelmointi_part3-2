@@ -11,7 +11,7 @@ app.use(express.json())
 const mongoose = require('mongoose')
 
 // ÄLÄ KOSKAAN TALLETA SALASANOJA GitHubiin!
-
+/*
 const url = process.env.MONGODB_URI
 
 mongoose.set('strictQuery',false)
@@ -30,7 +30,7 @@ noteSchema.set('toJSON', {
     }
   })
 
-
+*/
 
 let notes = [
     {

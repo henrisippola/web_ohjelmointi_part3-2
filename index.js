@@ -1,6 +1,8 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const Note = require('./models/note')
 
 app.use(express.static('dist'))
 app.use(cors())
@@ -9,8 +11,8 @@ app.use(express.json())
 const mongoose = require('mongoose')
 
 // ÄLÄ KOSKAAN TALLETA SALASANOJA GitHubiin!
-const url =
-  `mongodb+srv://henrisippola:QLh966J9lcscP22X@cluster0.dfreifj.mongodb.net/noteApp?retryWrites=true&w=majority`
+
+const url = process.env.MONGODB_URI
 
 mongoose.set('strictQuery',false)
 mongoose.connect(url)
@@ -20,7 +22,15 @@ const noteSchema = new mongoose.Schema({
   important: Boolean,
 })
 
-const Note = mongoose.model('Note', noteSchema)
+noteSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+      returnedObject.id = returnedObject._id.toString()
+      delete returnedObject._id
+      delete returnedObject.__v
+    }
+  })
+
+
 
 let notes = [
     {
@@ -46,7 +56,7 @@ app.get('/', (req, res) => {
 
 app.get('/api/notes', (req, res) => {
     Note.find({}).then(notes => {
-        response.json(notes)
+        res.json(notes)
     })
 })
 
@@ -95,7 +105,7 @@ app.post('/api/notes', (request, response) => {
     response.json(note)
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })

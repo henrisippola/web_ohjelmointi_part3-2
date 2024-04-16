@@ -6,6 +6,22 @@ app.use(express.static('dist'))
 app.use(cors())
 app.use(express.json())
 
+const mongoose = require('mongoose')
+
+// ÄLÄ KOSKAAN TALLETA SALASANOJA GitHubiin!
+const url =
+  `mongodb+srv://henrisippola:QLh966J9lcscP22X@cluster0.dfreifj.mongodb.net/noteApp?retryWrites=true&w=majority`
+
+mongoose.set('strictQuery',false)
+mongoose.connect(url)
+
+const noteSchema = new mongoose.Schema({
+  content: String,
+  important: Boolean,
+})
+
+const Note = mongoose.model('Note', noteSchema)
+
 let notes = [
     {
         id: 1,
@@ -29,7 +45,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/notes', (req, res) => {
-    res.json(notes)
+    Note.find({}).then(notes => {
+        response.json(notes)
+    })
 })
 
 app.get('/api/notes/:id', (request, response) => {

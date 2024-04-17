@@ -14,16 +14,16 @@ mongoose.set('strictQuery', false)
 mongoose.connect(url).then(() => {
   const noteSchema = new mongoose.Schema({
     content: String,
-    important: Boolean,
+    important: Boolean
   })
-  
+
   const Note = mongoose.model('Note', noteSchema)
-  
+
   const note = new Note({
     content: 'HTML is x',
-    important: true,
+    important: true
   })
-  
+
   /*
   note.save().then(result => {
     console.log('note saved!')
@@ -37,4 +37,3 @@ mongoose.connect(url).then(() => {
     mongoose.connection.close()
   })
 })
-
